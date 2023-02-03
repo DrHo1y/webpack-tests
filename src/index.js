@@ -1,10 +1,21 @@
 const Web3 = require('web3')
 
-const checkAndInstantiateWeb3 = () => {
+const checkAndInstantiateWeb3 = async () => {
   try {
-    const web3 = new Web3('https://rpc.ankr.com/eth')
-    console.log(web3.eth)
-    return web3
+    const mainnet = 'https://rpc.ankr.com/eth'
+    const wallet = '0x24A2194D4f6865CA474E454332bA8f08d41BDAdF'
+    const web3 = new Web3(new Web3.providers.HttpProvider((mainnet)))
+    let balance = await web3.eth.getBalance(wallet)
+    balance = balance
+    balance = Number(balance)
+    console.log(balance)
+    balance = balance / 1000000000000000000
+    balance = balance.toFixed(8)
+    
+    const el = document.createElement('div')
+    el.innerHTML = `${balance} ETH`
+    document.body.append(el)
+
   } catch(e) {
     console.error(e)
   }
@@ -15,19 +26,18 @@ const { printMe } = require('./print')
 
 const component = () => {
   const element = document.createElement('div')
-  const btn = document.createElement('button')
+  const br = document.createElement('br')
   const code = document.createElement('code')
 
   element.innerHTML = _.join(['Hello', 'webpack'], ' ')
 
-  btn.innerHTML = 'Click me and check the console!'
-  btn.onclick = printMe
-  element.appendChild(btn)
+  element.appendChild(br)
 
-  code.innerHTML = checkAndInstantiateWeb3()
+  code.innerHTML = 'lol'
   element.appendChild(code)
 
   return element
 }
 
 document.body.appendChild(component())
+document.onload = checkAndInstantiateWeb3()
